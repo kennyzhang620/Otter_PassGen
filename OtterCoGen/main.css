@@ -1,0 +1,214 @@
+@import url('https://fonts.googleapis.com/css2?family=Platypi:wght@400;500;600;700&display=swap');
+
+/* --- FONT VARIABLES --- */
+:root {
+    --thin: 0;
+    --regular: 400;
+    --medium: 500;
+    --semi-bold: 600;
+    --bold: 700;
+  }
+  
+/* --- COLOR VARIABLES --- */
+:root {
+    --color-purple: #302438;
+    --color-white: #FFFFFF;
+    --color-orange: #EFB158;
+    --color-dark-purple: #1B141F;
+}
+
+header {
+    padding-top: 14px;
+    padding-left: 20px;
+    padding-bottom: 30px;
+}
+
+body {
+    font-family: Platypi, serif;
+    box-sizing: border-box;
+    width: 300px;
+    height: 500px;
+    margin: 0;
+    padding: 0;
+    color: var(--color-white);
+    background-color: var(--color-purple);
+}
+
+footer {
+  padding-top: 14px;
+  padding-left: 20px;
+  padding-bottom: 20px;
+}
+
+h1 {
+    font-family: 'Platypi', serif;
+    font-size: 0.8rem;
+    font-weight: var(--thin);
+    padding: 0;
+    margin: 0;
+}
+
+h2 {
+  font-family: 'Platypi', serif;
+  font-size: 2rem;
+  font-weight: var(--bold);
+  padding: 0;
+  margin: 0;
+}
+
+h3 {
+  font-family: 'Platypi', serif;
+  font-size: 1.4rem;
+  font-weight: var(--thin);
+  padding: 0;
+  margin: 0;
+}
+
+p {
+  font-family: 'Platypi', serif;
+  font-size: 0.8rem;
+  font-weight: var(--thin);
+  padding: 0;
+}
+
+#mode-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  text-align: center; 
+  height: 130px;
+}
+
+#data-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 250px;
+  padding-top: 20px;
+
+}
+
+#data-container {
+  overflow: auto;
+  background-color: var(--color-dark-purple);
+  width: 75%;
+  height: 250px;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  margin-left: 1rem;
+  margin-right: 1rem;
+}
+
+.stormy-image {
+  position: absolute;
+  top: 315px;
+  left: 360px;
+  transform: scale(0.5);
+  transition: 1s;
+}
+
+.mode:checked + .stormy-image:before {
+  transform: translate(26px, 0);
+}
+
+/* --- https://www.w3schools.com/howto/howto_css_switch.asp --- */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+  }
+  
+  .switch input { 
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--color-dark-purple);
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+  
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: var(--color-white);;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+  
+  input:checked + .slider {
+    background-color: var(--color-orange);
+  }
+  
+  input:focus + .slider {
+    box-shadow: 0 0 1px var(--color-orange);
+  }
+  
+  input:checked + .slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+  }
+  
+  /* Rounded sliders */
+  .slider.round {
+    border-radius: 34px;
+  }
+  
+  .slider.round:before {
+    border-radius: 50%;
+  }
+
+  .container {
+    display: flex;
+    justify-content: space-between;
+  }
+
+.column {
+    flex: 1;
+    margin: 0 10px;
+  }
+
+
+#black-percentage {
+  background-color: #694581;
+  height: 2rem;
+  width: 10%;
+  margin: 0px;
+  padding: 0px;
+  z-index: 2;
+}
+
+
+#white-percentage {
+  background-color: #EFB158;
+  height: 2rem;
+  width: 90%;
+  margin: 0px;
+  padding: 0px;
+  z-index: 2;
+}
+
+#threshold-percentage {
+  border: 1px solid aqua;
+  border-radius: 1px;
+  margin-left: 100%;
+  width: 12%; /* Adjust width as needed */
+  z-index: 4;
+}
+
+
