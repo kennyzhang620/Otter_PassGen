@@ -85,6 +85,14 @@ link.addEventListener('mouseleave', async function () {
     link.type = "password"
 });
 
+document.getElementById("n1").addEventListener('click', async function () {
+    sendTo();
+});
+
+document.getElementById("s1").addEventListener('click', async function () {
+    sendTo();
+});
+
 var sol = document.getElementById('solution');
 var sol2 = document.getElementById('sol2');
 // onClick's logic below:
