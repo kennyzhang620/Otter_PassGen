@@ -51,7 +51,7 @@ async function sendTo() {
     console.log(tab.url);
 
     const b1 = tab.url ? tab.url.split('/')[2] : document.getElementById("base").value.split('/')[2]
-    const data = { "num": document.getElementById("n1").checked, "symbols": document.getElementById("s1").checked, "address": document.getElementById("addr").value, "base": Sha256.hash(b1), "salt": Sha256.hash(document.getElementById("salt").value), "hash": Sha256.hash(Math.floor(Date.now() / (1000 * 60)).toString()) };
+    const data = { "num": document.getElementById("n1").checked, "symbols": document.getElementById("s1").checked, "address": document.getElementById("addr").value, "base": Sha256.hash(b1), "salt": Sha256.hash(document.getElementById("salt").value), "hash": Sha256.hash(Math.floor(Date.now() / (1000 * 3)).toString()) };
 
     console.log(data)
 
