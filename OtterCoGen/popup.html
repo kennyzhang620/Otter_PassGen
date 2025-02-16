@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <title>Otter Co-Gen</title>
     <link href="main.css" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=content_copy" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 </head>
 <!-- **** HEAD SECTION ENDS **** -->
     <body>
@@ -21,7 +21,7 @@
                 <h3>Your Password</h3>
                 <div style="display: flex">
                     <input style="width: 90%;" type="password" id="solution" />
-                    <button id="sol2"class="material-symbols-outlined">
+                    <button id="sol2" class="material-symbols-outlined">
                         content_copy
                     </button>
                 </div>
@@ -35,7 +35,12 @@
                 <input type="text" id="addr" name="address" value="97c489b6c1231ecd9fac99df40e60cec000a70a057d5971fb520c578da8e8841">
                 <textarea style="display: none;" id="base" name="base" rows="3" cols="25">https://travelers.wd5.myworkdayjobs.com/</textarea>
                 <h5>Security Code</h5>
-                <input type="password" id="salt" name="salt" value="">
+                <div style="display: flex; transform: scale(0.80);">
+                    <input type="password" id="salt" name="salt" value="">
+                    <button id="sol3" class="material-symbols-outlined">
+                        fingerprint
+                    </button>
+                </div>
                 <h4><div id="FQDN" style="transform: translate(0px, 43px);"></div></h4>
                 <img id="stormy_hs" style="top: 300px; left: 90px; right: 0vw; bottom:10vh;" src="images/stormy_peek.png" class="stormy-image"
                      alt="Drawing of Stormy's head peeking.">

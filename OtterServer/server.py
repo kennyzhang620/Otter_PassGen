@@ -7,7 +7,7 @@ import datetime as dt
 print(sha256("100001".encode('utf-8')).hexdigest())
 
 def stime():
-    ct = int(dt.datetime.now().timestamp() / 60)
+    ct = int(dt.datetime.now().timestamp() / 3)
     return sha256(str(ct).encode('utf-8')).hexdigest()
 
 def j(p):

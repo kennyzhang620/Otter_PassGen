@@ -51,7 +51,7 @@ async function sendTo() {
     console.log(tab.url);
 
     const b1 = tab.url ? tab.url.split('/')[2] : document.getElementById("base").value.split('/')[2]
-    const data = { "num": document.getElementById("n1").checked, "symbols": document.getElementById("s1").checked, "address": document.getElementById("addr").value, "base": Sha256.hash(b1), "salt": Sha256.hash(document.getElementById("salt").value), "hash": Sha256.hash(Math.floor(Date.now() / (1000 * 60)).toString()) };
+    const data = { "num": document.getElementById("n1").checked, "symbols": document.getElementById("s1").checked, "address": document.getElementById("addr").value, "base": Sha256.hash(b1), "salt": Sha256.hash(document.getElementById("salt").value), "hash": Sha256.hash(Math.floor(Date.now() / (1000 * 3)).toString()) };
 
     console.log(data)
 
@@ -95,6 +95,7 @@ document.getElementById("s1").addEventListener('click', async function () {
 
 var sol = document.getElementById('solution');
 var sol2 = document.getElementById('sol2');
+var sol3 = document.getElementById('sol3');
 // onClick's logic below:
 sol.addEventListener('click', async function () {
     navigator.clipboard.writeText(sol.value);
@@ -102,6 +103,26 @@ sol.addEventListener('click', async function () {
 
 sol2.addEventListener('click', async function () {
     navigator.clipboard.writeText(sol.value);
+});
+
+var dataN = null;
+
+sol3.addEventListener('click', async function () {
+    const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
+    console.log(tab.url);
+
+    const b1 = tab.url ? tab.url.split('/')[2] : document.getElementById("base").value.split('/')[2]
+    const data = { "num": document.getElementById("n1").checked, "symbols": document.getElementById("s1").checked, "address": document.getElementById("addr").value, "base": Sha256.hash(b1), "salt": Sha256.hash(document.getElementById("salt").value), "hash": Sha256.hash(Math.floor(Date.now() / (1000 * 3)).toString()) };
+
+    sendPacket("http://127.0.0.1:5000/pre-a", "POST", data, true, function (res) {
+
+        if (res == "SUCCESS")
+            dataN = window.open('http://localhost:5000/auth',"_blank")
+    }, function () {
+
+    }, 1000)
+    
+
 });
 
 sol.addEventListener('mouseenter', async function () {
