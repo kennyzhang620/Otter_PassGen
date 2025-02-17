@@ -116,40 +116,62 @@ var cbS = null;
 
 var to = 0;
 
+var AUTH_ST = 0;
+
 sol3.addEventListener('click', async function () {
-    const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
-    console.log(tab.url);
 
-    const b1 = tab.url ? tab.url.split('/')[2] : document.getElementById("base").value.split('/')[2]
-    const data = { "num": document.getElementById("n1").checked, "symbols": document.getElementById("s1").checked, "address": document.getElementById("addr").value, "base": Sha256.hash(b1), "salt": Sha256.hash(document.getElementById("salt").value), "hash": Sha256.hash(Math.floor(Date.now() / (1000 * 3)).toString()) };
+    if (AUTH_ST == 2) (
+        sendPacket("http://127.0.0.1:4865/res-p", "GET", null, true, function results(res) {
+            if (res != "undefined") {
+                window.open('http://localhost:4865/keys', "_blank", 'popup')
+            }
+            AUTH_ST = 0
+            sol3.innerHTML = 'fingerprint'
 
-    document.getElementById("FQDN").innerHTML = b1
-    sendPacket("http://127.0.0.1:4865/pre-a", "POST", data, true, function (res) {
+        }, null, 1000)
+    )
 
-        if (res == "SUCCESS") {
-            dataN = window.open('http://localhost:4865/auth', "_blank", 'popup')
-            cbS = setInterval(function a() {
+    if (AUTH_ST == 1) return;
 
-                if (to > 30) {
-                    clearInterval(cbS)
-                    to = 0;
-                }
+    if (AUTH_ST == 0) {
 
-                sendPacket("http://127.0.0.1:4865/res-p", "GET", null, true, function results(res) {
-                    if (res != "undefined") {
-                        sol.value = res
-                        link.value = Sha256.hash(res);
+        AUTH_ST = 1
+        const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
+        console.log(tab.url);
+
+        const b1 = tab.url ? tab.url.split('/')[2] : document.getElementById("base").value.split('/')[2]
+        const data = { "num": document.getElementById("n1").checked, "symbols": document.getElementById("s1").checked, "address": document.getElementById("addr").value, "base": Sha256.hash(b1), "salt": Sha256.hash(document.getElementById("salt").value), "hash": Sha256.hash(Math.floor(Date.now() / (1000 * 3)).toString()) };
+
+        document.getElementById("FQDN").innerHTML = b1
+        sendPacket("http://127.0.0.1:4865/pre-a", "POST", data, true, function (res) {
+
+            if (res == "SUCCESS") {
+                dataN = window.open('http://localhost:4865/auth', "_blank", 'popup')
+                cbS = setInterval(function a() {
+
+                    if (to > 30) {
                         clearInterval(cbS)
+                        to = 0;
+                        AUTH_ST = 0
                     }
 
-                }, null, 1000)
+                    sendPacket("http://127.0.0.1:4865/res-p", "GET", null, true, function results(res) {
+                        if (res != "undefined") {
+                            sol.value = res
+                            link.value = Sha256.hash(res);
+                            clearInterval(cbS)
+                            AUTH_ST = 2
+                            sol3.innerHTML = 'settings'
+                        }
 
-                to++;
-            }, 1000)
-        }
-    }, function () {}, 1000)
-    
+                    }, null, 1000)
 
+                    to++;
+                }, 1000)
+            }
+        }, function () { }, 1000)
+
+    }
 });
 
 sol.addEventListener('mouseenter', async function () {
