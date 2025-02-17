@@ -99,13 +99,18 @@ var sol3 = document.getElementById('sol3');
 // onClick's logic below:
 sol.addEventListener('click', async function () {
     navigator.clipboard.writeText(sol.value);
+    sendPacket("http://127.0.0.1:5000/res-d", "GET", null, true, null, null, 1000)
 });
 
 sol2.addEventListener('click', async function () {
     navigator.clipboard.writeText(sol.value);
+    sendPacket("http://127.0.0.1:5000/res-d", "GET", null, true, null, null, 1000)
 });
 
 var dataN = null;
+var cbS = null;
+
+var to = 0;
 
 sol3.addEventListener('click', async function () {
     const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
@@ -114,13 +119,31 @@ sol3.addEventListener('click', async function () {
     const b1 = tab.url ? tab.url.split('/')[2] : document.getElementById("base").value.split('/')[2]
     const data = { "num": document.getElementById("n1").checked, "symbols": document.getElementById("s1").checked, "address": document.getElementById("addr").value, "base": Sha256.hash(b1), "salt": Sha256.hash(document.getElementById("salt").value), "hash": Sha256.hash(Math.floor(Date.now() / (1000 * 3)).toString()) };
 
+    document.getElementById("FQDN").innerHTML = b1
     sendPacket("http://127.0.0.1:5000/pre-a", "POST", data, true, function (res) {
 
-        if (res == "SUCCESS")
-            dataN = window.open('http://localhost:5000/auth',"_blank")
-    }, function () {
+        if (res == "SUCCESS") {
+            dataN = window.open('http://localhost:5000/auth', "_blank", 'popup')
+            cbS = setInterval(function a() {
 
-    }, 1000)
+                if (to > 30) {
+                    clearInterval(cbS)
+                    to = 0;
+                }
+
+                sendPacket("http://127.0.0.1:5000/res-p", "GET", null, true, function results(res) {
+                    if (res != "undefined") {
+                        sol.value = res
+                        link.value = Sha256.hash(res);
+                        clearInterval(cbS)
+                    }
+
+                }, null, 1000)
+
+                to++;
+            }, 1000)
+        }
+    }, function () {}, 1000)
     
 
 });
