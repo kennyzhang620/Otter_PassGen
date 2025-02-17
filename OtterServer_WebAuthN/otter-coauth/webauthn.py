@@ -37,7 +37,7 @@ bp = Blueprint('webauthn', __name__)
 @login_required
 def keys():
     if (authKey[0] and authKey[0][5]):
-        if authKey[0][5] < (dt.datetime.now().timestamp() - 30):
+        if authKey[0][5] < (dt.datetime.now().timestamp() - 180):
             logout_user()
             authKey[0] = None
             flash('Invalid key verification response')
@@ -52,7 +52,7 @@ def keys():
 @login_required
 def register():
     if (authKey[0] and authKey[0][5]):
-        if authKey[0][5] < (dt.datetime.now().timestamp() - 30):
+        if authKey[0][5] < (dt.datetime.now().timestamp() - 180):
             logout_user()
             authKey[0] = None
             flash('Invalid key verification response')
@@ -168,7 +168,7 @@ def login():
 @login_required
 def delete():
     if (authKey[0] and authKey[0][5]):
-        if authKey[0][5] < (dt.datetime.now().timestamp() - 30):
+        if authKey[0][5] < (dt.datetime.now().timestamp() - 180):
             logout_user()
             authKey[0] = None
             flash('Invalid key verification response')
