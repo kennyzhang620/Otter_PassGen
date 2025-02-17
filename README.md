@@ -28,6 +28,9 @@ After authentication is successful, the password is automatically filled in.
 
 ![image](https://github.com/user-attachments/assets/1bb62e22-da70-45fe-b553-03609cb07a43)
 
+### Automatic login based on supplied code
+By using a Passkey, the backend can authenticate you and automatically generate the password based on a pre-existing code you supply! The code is hashed and only accessible to the server and never transmitted to the extension. To start, enter the code into the field and click on the biometric icon to start setting up a passkey based on that context.
+
 ### Passkey setup
 
 On first initialization, you will be required to add a Passkey. You can also edit Passkeys by authenticating and clicking on the gear icon to change the current configuration.
