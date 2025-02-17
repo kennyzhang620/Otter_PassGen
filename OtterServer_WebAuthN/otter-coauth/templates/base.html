@@ -24,9 +24,13 @@
     <script>
 
         var to = 0;
+        var lo = 0;
         function cl() {
-            if (window.location == "http://localhost:4865/res" || window.location == "http://127.0.0.1:4865/res" || to > 30)
+            if (to > 30 || lo > 15)
                 close();
+
+            if (window.location == "http://localhost:4865/res" || window.location == "http://127.0.0.1:4865/res")
+                lo++;
 
             to++;
         }
