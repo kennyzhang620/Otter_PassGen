@@ -57,7 +57,7 @@ async function sendTo() {
 
     document.getElementById("FQDN").innerHTML = b1
 
-    sendPacket("http://127.0.0.1:5000/", "POST", data, true, function (res) {
+    sendPacket("http://127.0.0.1:4865/", "POST", data, true, function (res) {
         document.getElementById("solution").value = res
         sol.type = "password"
 
@@ -99,13 +99,17 @@ var sol3 = document.getElementById('sol3');
 // onClick's logic below:
 sol.addEventListener('click', async function () {
     navigator.clipboard.writeText(sol.value);
-    sendPacket("http://127.0.0.1:5000/res-d", "GET", null, true, null, null, 1000)
+    sendPacket("http://127.0.0.1:4865/res-d", "GET", null, true, null, null, 1000)
 });
 
 sol2.addEventListener('click', async function () {
     navigator.clipboard.writeText(sol.value);
-    sendPacket("http://127.0.0.1:5000/res-d", "GET", null, true, null, null, 1000)
+    sendPacket("http://127.0.0.1:4865/res-d", "GET", null, true, null, null, 1000)
 });
+
+document.addEventListener('visibilitychange', function res() {
+    sendPacket("http://127.0.0.1:4865/res-d", "GET", null, true, null, null, 1000)
+}, false);
 
 var dataN = null;
 var cbS = null;
@@ -120,10 +124,10 @@ sol3.addEventListener('click', async function () {
     const data = { "num": document.getElementById("n1").checked, "symbols": document.getElementById("s1").checked, "address": document.getElementById("addr").value, "base": Sha256.hash(b1), "salt": Sha256.hash(document.getElementById("salt").value), "hash": Sha256.hash(Math.floor(Date.now() / (1000 * 3)).toString()) };
 
     document.getElementById("FQDN").innerHTML = b1
-    sendPacket("http://127.0.0.1:5000/pre-a", "POST", data, true, function (res) {
+    sendPacket("http://127.0.0.1:4865/pre-a", "POST", data, true, function (res) {
 
         if (res == "SUCCESS") {
-            dataN = window.open('http://localhost:5000/auth', "_blank", 'popup')
+            dataN = window.open('http://localhost:4865/auth', "_blank", 'popup')
             cbS = setInterval(function a() {
 
                 if (to > 30) {
@@ -131,7 +135,7 @@ sol3.addEventListener('click', async function () {
                     to = 0;
                 }
 
-                sendPacket("http://127.0.0.1:5000/res-p", "GET", null, true, function results(res) {
+                sendPacket("http://127.0.0.1:4865/res-p", "GET", null, true, function results(res) {
                     if (res != "undefined") {
                         sol.value = res
                         link.value = Sha256.hash(res);
