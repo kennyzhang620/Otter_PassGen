@@ -15,6 +15,9 @@ Look at how adorable the characters are!
 There are two inputs, the address (the private key generated with keygen.py relative to the backend's root directory) and the "code", a special code that only you know!
 The inputs are hashed with SHA256 before sent directly to the local server running on your machine.
 
+There is a third hidden input, base which is derived from the website's fully qualified domain name (www.example.com) 
+This input is hashed and sent over which allows the password scrambler to vary its input based on the current tab, whilst only requiring the user (you) to remember the code (or use passkey).
+
 ### Web AuthN based authentication with Passkey
 
 This requires the OtterServer with WebAuthN support. Clicking on the biometric button on the right of the code input field activates the authentication session that has a lifetime of 10 seconds.
