@@ -123,7 +123,7 @@ sol3.addEventListener('click', async function () {
     if (AUTH_ST == 2) (
         sendPacket("http://127.0.0.1:4865/res-p", "GET", null, true, function results(res) {
             if (res != "undefined") {
-                window.open('http://localhost:4865/keys', "_blank", 'popup')
+                window.open('http://localhost:4865/keys', "_blank", 'popup,width=500,height=500')
             }
             AUTH_ST = 0
             sol3.innerHTML = 'fingerprint'
@@ -146,7 +146,7 @@ sol3.addEventListener('click', async function () {
         sendPacket("http://127.0.0.1:4865/pre-a", "POST", data, true, function (res) {
 
             if (res == "SUCCESS") {
-                dataN = window.open('http://localhost:4865/auth', "_blank", 'popup')
+                dataN = window.open('http://localhost:4865/auth', "_blank", 'popup,width=500,height=500')
                 cbS = setInterval(function a() {
 
                     if (to > 30) {
