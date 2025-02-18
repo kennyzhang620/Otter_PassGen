@@ -47,5 +47,14 @@ There are two flavours:
 - OtterServer, this backend only supports password generation direct from address and user inputted code.
 - OtterServer_WebAuthN, this adds support for WebAuthN allowing for passkey and biometric authentication support. The server requires a virtualenv such as pipenv or conda for proper functionality.
 
+### The Flow
+
+- The hashed base, salt and unhashed path to the key relative to the server is retrieved from the extension's POST request.
+- The base is used as the input vector to be transformed and converted from string to numerical numpy array for processing.
+- The salt is used as a seed for the Python random number generator to scramble the base. The base is recursively scrambled 3 times.
+- The key (which is a NxN invertible matrix with a minimum condition value of 500000 or more) is multiplied with the base to generate a new vector.
+- The vector is unrolled and modular arithmetic is applied to map extraneous values into the range of ASCII values, based on whether or not numeric values or symbols are desired.
+- The vector is converted into a string and transmitted back to the Chrome extension as a reply to the POST request.
+
 # Art Credits
 Credits to @chockie for the art assets used in this project.
