@@ -1,3 +1,5 @@
+from flask import Blueprint, render_template
+
 from kencrypt import *
 from flask import Flask, request
 
@@ -5,6 +7,7 @@ from hashlib import sha256
 import datetime as dt
 
 print(sha256("100001".encode('utf-8')).hexdigest())
+HOST_IP = os.environ.get('HOST_IP') or "127.0.0.1"
 
 def stime():
     ct = int(dt.datetime.now().timestamp() / 3)
@@ -97,20 +100,53 @@ def generateHash(init: str, salt: str, key: str, n, s1):
 
     return clean(res)
 
-app = Flask(__name__)
+bp = Blueprint('main', __name__)
 
-@app.route('/', methods=['POST'])
+authKey = [None]
+from flask_login import login_required, login_user, logout_user
+
+def generateOut():
+    if authKey[0] == None or not authKey[0][6]:
+        return "undefined"
+    return generateHash(authKey[0][0],authKey[0][1], authKey[0][2], authKey[0][3],authKey[0][4])
+
+@bp.route('/res')
+def index():
+    if (authKey[0] and authKey[0][5]):
+        if authKey[0][5] < (dt.datetime.now().timestamp() - 30):
+            logout_user()
+            authKey[0] = None
+
+    outv = render_template('index.html')
+    return outv
+
+@bp.route('/res-p', methods={"GET"})
+def re_ind():
+    if (authKey[0] and authKey[0][5]):
+        if authKey[0][5] < (dt.datetime.now().timestamp() - 30):
+            logout_user()
+            authKey[0] = None
+
+    res = generateOut()
+    return res
+
+@bp.route('/res-d', methods={"GET"})
+def re_del():
+    logout_user()
+    authKey[0] = None
+    return "SUCCESS"
+
+@bp.route('/', methods=['POST'])
 def result():
-    print(request.json)
-
+    print(request.json, HOST_IP)
+    logout_user()
+    authKey[0] = None
     A = request.json
 
-    if (not A['hash'] or A['hash'] != stime() or request.remote_addr != "127.0.0.1"):
+    if (not A['hash'] or A['hash'] != stime() or (request.remote_addr != "127.0.0.1" and request.remote_addr != HOST_IP)):
         return "FAIL"
 
     if (A['address'] and A['base'] and A['salt']):
         return generateHash(A['base'], A['salt'], A['address'], A['num'],A['symbols'])
     
     return "HTTP SUCCESS"
-if __name__ == '__main__':
-    app.run()

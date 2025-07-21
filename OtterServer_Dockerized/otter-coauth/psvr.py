@@ -65,13 +65,6 @@ def v(inp, n: bool, s1: bool):
         return inp + 33
     return inp
 
-def clean(inStr):
-    res = ""
-    for sti in inStr:
-        if (ord(sti) >= 33 and ord(sti) <= 126):
-            res += sti
-    return res
-
 def generateHash(init: str, salt: str, key: str, n, s1):
     res = ""
     try:
@@ -95,7 +88,7 @@ def generateHash(init: str, salt: str, key: str, n, s1):
         b.extend(map(ord, s))
         res = ''.join(list(map(chr, list(map(lambda x: v(x % 127, n, s1),list(generateHashedBytes(b)))))))[:14] 
 
-    return clean(res)
+    return res
 
 app = Flask(__name__)
 

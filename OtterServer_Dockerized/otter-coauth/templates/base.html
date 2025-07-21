@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Otter CoAuth Web Authenticator</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Platypi:wght@400;500;600;700&display=swap');
+    </style>
+  </head>
+  <body style="color: white; background-color: #302438; font-family: 'Platypi', serif;">
+    <div class="container mt-3">
+      {% if get_flashed_messages() %}
+        {% for message in get_flashed_messages() %}
+          <div class="alert alert-warning" role="alert">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+      {% block content %}{% endblock %}
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
+    <script>
+
+        var to = 0;
+        var lo = 0;
+        function cl() {
+            if (to > 30 || lo > 15)
+                close();
+
+            if (window.location == "http://localhost:4865/res" || window.location == "http://127.0.0.1:4865/res")
+                lo++;
+
+            to++;
+        }
+      // focus on the first input element
+      const firstInput = document.querySelector('input');
+      if (firstInput) {
+        firstInput.focus();
+        }
+
+        setInterval(cl, 1000);
+    </script>
+    {% block scripts %}{% endblock %}
+  </body>
+</html>
