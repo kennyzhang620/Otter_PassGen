@@ -3,6 +3,7 @@ Private key locally hosted password generator using Chrome extensions (HTML,CSS,
 
 # How to Use
 It consists of two main components, the Chromium compatible extension frontend and the Flask-based Python backend.
+For your convenience, a Dockerized version is provided for easy setup and consistency across multiple platforms. Just supply a key and build!
 
 ## Chromium based extension
 
