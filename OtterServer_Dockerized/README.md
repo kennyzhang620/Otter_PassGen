@@ -7,7 +7,10 @@
 If a key is not provided, use keygen.py to generate a key before building.
 
 Building and running your application
-When you're ready, start your application by running: docker compose up --build.
+When you're ready, start your application by running: 
+```bash
+docker compose up --build.
+```
 
 It will be ready for use... Almost. The HOST_IP environment variable must be set to the IP that is reported in the logs for proper functionality.
 
