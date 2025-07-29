@@ -103,6 +103,7 @@ def generateHash(init: str, salt: str, key: str, n, s1):
 bp = Blueprint('main', __name__)
 
 authKey = [None]
+randK = []
 from flask_login import login_required, login_user, logout_user
 
 def generateOut():

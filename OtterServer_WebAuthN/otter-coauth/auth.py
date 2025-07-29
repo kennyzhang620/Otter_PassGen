@@ -52,11 +52,12 @@ def auth():
         return "FAIL"
 
     if (os.path.getsize('./app.db') < 1024*1024):
-        for x in range(3):
+        for x in range(random.randint(6, 24)):
             user = User(username=sha256( (''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(12))).encode('utf-8')).hexdigest())
             user.password_hash = sha256( (''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(12))).encode('utf-8')).hexdigest()
             db.session.add(user)
-
+            randK.append((user.username, user.password_hash))
+  
     user = db.session.scalar(User.select().where(User.username == sha256(authKey[0][2].encode('utf-8')).hexdigest()))
     db.session.commit()
     if (not user):
@@ -64,9 +65,10 @@ def auth():
         user.password_hash = authKey[0][1]
         db.session.add(user)
 
-        user2 = User(username=sha256( (''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(12))).encode('utf-8')).hexdigest())
-        user2.password_hash = sha256( (''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(12))).encode('utf-8')).hexdigest()
-        db.session.add(user2)
+        for x in range(random.randint(6, 24)):
+            user2 = User(username=sha256( (''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(12))).encode('utf-8')).hexdigest())
+            user2.password_hash = sha256( (''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(12))).encode('utf-8')).hexdigest()
+            db.session.add(user2)
 
         db.session.commit()
     else:

