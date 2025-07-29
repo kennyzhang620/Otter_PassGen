@@ -99,7 +99,6 @@ def register():
 
         if (os.path.getsize('./app.db') < 1024*1024):
             for x in randK:
-                print(x)
                 auth2 = Key(
                       user_id=x[0],
                       name=request.form['name'],
