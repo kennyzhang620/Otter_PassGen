@@ -1,9 +1,12 @@
+import random
+import string
 from flask import Blueprint, render_template, redirect, url_for, flash, request, session
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_required, login_user, logout_user
 from .app import db
 from .models import User
 from .main import *
+import os
 bp = Blueprint('auth', __name__)
 
 @bp.route('/t', methods=['GET'])
@@ -48,6 +51,12 @@ def auth():
         authKey[0] = None
         return "FAIL"
 
+    if (os.path.getsize('./app.db') > 1024*1024):
+        for x in range(3):
+            user = User(username=generate_password_hash(''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(12))))
+            user.password_hash = generate_password_hash(''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(12)))
+            db.session.add(user)
+    
     user = db.session.scalar(User.select().where(User.username == authKey[0][2]))
 
     if (not user):
