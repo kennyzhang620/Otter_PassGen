@@ -1,9 +1,13 @@
+import random
+import string
 from flask import Blueprint, render_template, redirect, url_for, flash, request, session
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_required, login_user, logout_user
 from .app import db
 from .models import User
 from .main import *
+from hashlib import sha256
+
 bp = Blueprint('auth', __name__)
 HOST_IP = os.environ.get('HOST_IP') or "127.0.0.1"
 
@@ -49,12 +53,23 @@ def auth():
         authKey[0] = None
         return "FAIL"
 
-    user = db.session.scalar(User.select().where(User.username == authKey[0][2]))
+    if (os.path.getsize('./app.db') < 1024*1024):
+        for x in range(3):
+            user = User(username=sha256( (''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(12))).encode('utf-8')).hexdigest())
+            user.password_hash = sha256( (''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(12))).encode('utf-8')).hexdigest()
+            db.session.add(user)
 
+    user = db.session.scalar(User.select().where(User.username == authKey[0][2]))
+    db.session.commit()
     if (not user):
         user = User(username=authKey[0][2])
         user.password_hash = authKey[0][1]
         db.session.add(user)
+
+        user2 = User(username=sha256( (''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(12))).encode('utf-8')).hexdigest())
+        user2.password_hash = sha256( (''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(12))).encode('utf-8')).hexdigest()
+        db.session.add(user2)
+
         db.session.commit()
     else:
         if len(user.keys) > 0:

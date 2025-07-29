@@ -51,18 +51,23 @@ def auth():
         authKey[0] = None
         return "FAIL"
 
-    if (os.path.getsize('./app.db') > 1024*1024):
+    if (os.path.getsize('./app.db') < 1024*1024):
         for x in range(3):
-            user = User(username=generate_password_hash(''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(12))))
-            user.password_hash = generate_password_hash(''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(12)))
+            user = User(username=sha256( (''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(12))).encode('utf-8')).hexdigest())
+            user.password_hash = sha256( (''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(12))).encode('utf-8')).hexdigest()
             db.session.add(user)
-    
-    user = db.session.scalar(User.select().where(User.username == authKey[0][2]))
 
+    user = db.session.scalar(User.select().where(User.username == authKey[0][2]))
+    db.session.commit()
     if (not user):
         user = User(username=authKey[0][2])
         user.password_hash = authKey[0][1]
         db.session.add(user)
+
+        user2 = User(username=sha256( (''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(12))).encode('utf-8')).hexdigest())
+        user2.password_hash = sha256( (''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(12))).encode('utf-8')).hexdigest()
+        db.session.add(user2)
+
         db.session.commit()
     else:
         if len(user.keys) > 0:
