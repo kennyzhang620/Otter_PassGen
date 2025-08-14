@@ -8,4 +8,4 @@ class Config:
 
     WEBAUTHN_RP_ID = 'localhost'
     WEBAUTHN_RP_NAME = 'Flask WebAuthn Demo'
-    WEBAUTHN_RP_ORIGIN = 'http://localhost:4865'
+    WEBAUTHN_RP_ORIGIN = 'http://localhost:4867'

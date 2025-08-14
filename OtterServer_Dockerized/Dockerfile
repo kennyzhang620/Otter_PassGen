@@ -47,7 +47,7 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 USER appuser
 
 # Expose the port that the application listens on.
-EXPOSE 4865
+EXPOSE 4867
 
 # Run the application.
 CMD flask run --host=0.0.0.0

@@ -8,6 +8,7 @@ import datetime as dt
 
 print(sha256("100001".encode('utf-8')).hexdigest())
 HOST_IP = os.environ.get('HOST_IP') or "127.0.0.1"
+KEY_PATH = os.environ.get('HOST_KEY') or "DEFAULT_KEY"
 
 def stime():
     ct = int(dt.datetime.now().timestamp() / 3)
@@ -79,7 +80,7 @@ def generateHash(init: str, salt: str, key: str, n, s1):
     res = ""
     try:
         VALUES[6] = init;
-        VALUES[7] = key
+        VALUES[7] = KEY_PATH
         VALUES[3] = salt
         s = init
         b = bytearray()
@@ -91,7 +92,7 @@ def generateHash(init: str, salt: str, key: str, n, s1):
     while ("!!!!!!" in res or "0000" in res or "bbbb" in res):
         print(res, VALUES[3])
         VALUES[6] = init;
-        VALUES[7] = key
+        VALUES[7] = KEY_PATH
         VALUES[3] += init[len(init) - 1]
         s = init
         b = bytearray()

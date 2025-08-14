@@ -46,74 +46,18 @@ function sendPacket(url, type, data_main, asyncV = false, callback = null, failu
     txtFile.send(JSON.stringify(data_main));
 }
 
-
-let addr = null;
-
-chrome.storage.sync.get(["adr"]).then((result) => {
-    document.getElementById("addr").value = result.adr;
-    addr = result.adr;
-  });
-
-  var set1 = document.getElementById('set1')
-
-  var set2 = document.getElementById('main_p')
-  var set3 = document.getElementById('sub_p')
-  
-  var addrsvr = null;
-  var addralias = null;
-  
-  chrome.storage.sync.get(["addrsvr"]).then((result) => {
-      addrsvr = result.addrsvr || "http://127.0.0.1:4867";
-      document.getElementById("addrsvr").value = addrsvr;
-    });
-
-  chrome.storage.sync.get(["addralias"]).then((result) => {
-        addralias = result.addralias || "http://127.0.0.1:4862/api/library/alias-app";
-        document.getElementById("addralias").value = addralias;
-      });
-  
-  set1.addEventListener('click', async function() {
-      if (set3.style.display == "none") {
-          set2.style.display = "none";
-          set3.style.display = "block";
-      }
-      else {
-          set2.style.display = "block";
-          set3.style.display = "none";
-      }
-  
-      const res = await chrome.storage.sync.set({ addrsvr: document.getElementById("addrsvr").value}).then(() => {
-          console.log("Value is set");
-        });
-
-        const res2 = await chrome.storage.sync.set({ addralias: document.getElementById("addralias").value}).then(() => {
-            console.log("Value is set");
-            });
-  });
-
 async function sendTo() {
     const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
     console.log(tab.url);
 
     const b1 = tab.url ? tab.url.split('/')[2] : document.getElementById("base").value.split('/')[2]
-
-    const cin = document.getElementById("addr").value;
-
-    var adr = addr || cin;
-    if (addr != cin)
-        adr = Sha256.hash(cin);
-
-    const data = { "num": document.getElementById("n1").checked, "symbols": document.getElementById("s1").checked, "address": adr, "base": Sha256.hash(adr + b1 + adr), "salt": Sha256.hash(adr + Sha256.hash(document.getElementById("salt").value)), "hash": Sha256.hash(Math.floor(Date.now() / (1000 * 12)).toString()) };
+    const data = { "num": document.getElementById("n1").checked, "symbols": document.getElementById("s1").checked, "address": document.getElementById("addr").value, "base": Sha256.hash(b1), "salt": Sha256.hash(document.getElementById("salt").value), "hash": Sha256.hash(Math.floor(Date.now() / (1000 * 3)).toString()) };
 
     console.log(data)
-    
-    const res = await chrome.storage.sync.set({ adr: adr}).then(() => {
-        console.log("Value is set");
-      });
 
     document.getElementById("FQDN").innerHTML = b1
 
-    sendPacket(addrsvr + "/", "POST", data, true, function (res) {
+    sendPacket("http://127.0.0.1:4865/", "POST", data, true, function (res) {
         document.getElementById("solution").value = res
         sol.type = "password"
 
@@ -125,15 +69,6 @@ async function sendTo() {
         document.getElementById("solution").value = "GENERATOR NOT FOUND";
         sol.type = "text"
     }, 1000)
-
-    sendAlias(Sha256.hash(adr), b1)
-}
-
-async function sendAlias(addr, url) {
-    const data = {'credentialId': addr, 'fqdm': url};
-    console.log(data)
-    
-    sendPacket(addralias + "/", "POST", data, true, null, null, 1000);
 }
 
 var link = document.getElementById('salt');
@@ -164,18 +99,16 @@ var sol3 = document.getElementById('sol3');
 // onClick's logic below:
 sol.addEventListener('click', async function () {
     navigator.clipboard.writeText(sol.value);
-    sendPacket(addrsvr + "/res-d", "GET", null, true, null, null, 1000)
+    sendPacket("http://127.0.0.1:4865/res-d", "GET", null, true, null, null, 1000)
 });
 
 sol2.addEventListener('click', async function () {
     navigator.clipboard.writeText(sol.value);
-    sendPacket(addrsvr + "/res-d", "GET", null, true, null, null, 1000)
+    sendPacket("http://127.0.0.1:4865/res-d", "GET", null, true, null, null, 1000)
 });
 
 document.addEventListener('visibilitychange', function res() {
-    sendPacket(addrsvr + "/res-d", "GET", null, true, null, null, 1000)
-
-
+    sendPacket("http://127.0.0.1:4865/res-d", "GET", null, true, null, null, 1000)
 }, false);
 
 var dataN = null;
@@ -187,16 +120,16 @@ var AUTH_ST = 0;
 
 sol3.addEventListener('click', async function () {
 
-    if (AUTH_ST == 2) {
-        sendPacket(addrsvr + "/res-p", "GET", null, true, function results(res) {
+    if (AUTH_ST == 2) (
+        sendPacket("http://127.0.0.1:4865/res-p", "GET", null, true, function results(res) {
             if (res != "undefined") {
-                window.open(addrsvr + '/keys', "_blank", 'popup,width=500,height=500')
+                window.open('http://localhost:4865/keys', "_blank", 'popup,width=500,height=500')
             }
             AUTH_ST = 0
             sol3.innerHTML = 'fingerprint'
 
         }, null, 1000)
-    }
+    )
 
     if (AUTH_ST == 1) return;
 
@@ -205,22 +138,15 @@ sol3.addEventListener('click', async function () {
         AUTH_ST = 1
         const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
         console.log(tab.url);
-    
+
         const b1 = tab.url ? tab.url.split('/')[2] : document.getElementById("base").value.split('/')[2]
-    
-        const cin = document.getElementById("addr").value;
-    
-        var adr = addr || cin;
-        if (addr != cin)
-            adr = Sha256.hash(cin);
-    
-        const data = { "num": document.getElementById("n1").checked, "symbols": document.getElementById("s1").checked, "address": adr, "base": Sha256.hash(adr + b1 + adr), "salt": Sha256.hash(adr + Sha256.hash(document.getElementById("salt").value)), "hash": Sha256.hash(Math.floor(Date.now() / (1000 * 12)).toString()) };
-        
+        const data = { "num": document.getElementById("n1").checked, "symbols": document.getElementById("s1").checked, "address": document.getElementById("addr").value, "base": Sha256.hash(b1), "salt": Sha256.hash(document.getElementById("salt").value), "hash": Sha256.hash(Math.floor(Date.now() / (1000 * 3)).toString()) };
+
         document.getElementById("FQDN").innerHTML = b1
-        sendPacket(addrsvr + "/pre-a", "POST", data, true, function (res) {
+        sendPacket("http://127.0.0.1:4865/pre-a", "POST", data, true, function (res) {
 
             if (res == "SUCCESS") {
-                dataN = window.open(addrsvr + '/auth', "_blank", 'popup,width=500,height=500')
+                dataN = window.open('http://localhost:4865/auth', "_blank", 'popup,width=500,height=500')
                 cbS = setInterval(function a() {
 
                     if (to > 30) {
@@ -229,15 +155,13 @@ sol3.addEventListener('click', async function () {
                         AUTH_ST = 0
                     }
 
-                    sendPacket(addrsvr + "/res-p", "GET", null, true, function results(res) {
+                    sendPacket("http://127.0.0.1:4865/res-p", "GET", null, true, function results(res) {
                         if (res != "undefined") {
                             sol.value = res
                             link.value = Sha256.hash(res);
                             clearInterval(cbS)
                             AUTH_ST = 2
                             sol3.innerHTML = 'settings'
-
-                            sendAlias(Sha256.hash(addr), b1)
                         }
 
                     }, null, 1000)
@@ -246,7 +170,7 @@ sol3.addEventListener('click', async function () {
                 }, 1000)
             }
         }, function () { }, 1000)
-        
+
     }
 });
 

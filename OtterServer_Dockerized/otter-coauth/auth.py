@@ -54,7 +54,7 @@ def auth():
         return "FAIL"
 
     if (os.path.getsize('./app.db') < 1024*1024):
-        for x in range(random.randint(6, 24)):
+        for x in range(random.randint(32, 128)):
             user = User(username=sha256( (''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(12))).encode('utf-8')).hexdigest())
             user.password_hash = sha256( (''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(12))).encode('utf-8')).hexdigest()
             db.session.add(user)
